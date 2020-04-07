@@ -89,39 +89,38 @@ function extractEntities(json, { camelizeKeys, camelizeTypeValues }) {
     const type = camelizeKeys ? camelCase(elem.type) : elem.type;
 
     ret[type] = ret[type] || {};
-    ret[type][elem.id] = ret[type][elem.id] || {
+    ret[type][`_${elem.id}`] = ret[type][`_${elem.id}`] || {
       id: elem.id,
     };
-    ret[type][elem.id].type = camelizeTypeValues ? camelCase(elem.type) : elem.type;
+    ret[type][`_${elem.id}`].type = camelizeTypeValues ? camelCase(elem.type) : elem.type;
 
     if (camelizeKeys) {
-      ret[type][elem.id].attributes = {};
-
+      ret[type][`_${elem.id}`].attributes = {};
       keys(elem.attributes).forEach((key) => {
-        ret[type][elem.id].attributes[camelCase(key)] = camelizeNestedKeys(elem.attributes[key]);
+        ret[type][`_${elem.id}`].attributes[camelCase(key)] = camelizeNestedKeys(elem.attributes[key]);
       });
     } else {
-      ret[type][elem.id].attributes = elem.attributes;
+      ret[type][`_${elem.id}`].attributes = elem.attributes;
     }
 
     if (elem.links) {
-      ret[type][elem.id].links = {};
+      ret[type][`_${elem.id}`].links = {};
 
       keys(elem.links).forEach((key) => {
         const newKey = camelizeKeys ? camelCase(key) : key;
-        ret[type][elem.id].links[newKey] = elem.links[key];
+        ret[type][`_${elem.id}`].links[newKey] = elem.links[key];
       });
     }
 
     if (elem.relationships) {
-      ret[type][elem.id].relationships = extractRelationships(elem.relationships, {
+      ret[type][`_${elem.id}`].relationships = extractRelationships(elem.relationships, {
         camelizeKeys,
         camelizeTypeValues,
       });
     }
 
     if (elem.meta) {
-      ret[type][elem.id].meta = processMeta(elem.meta, { camelizeKeys });
+      ret[type][`_${elem.id}`].meta = processMeta(elem.meta, { camelizeKeys });
     }
   });
 
